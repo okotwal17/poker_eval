@@ -1,4 +1,5 @@
 #include <evaluate.h>
+#include <table.h>
 /*
 xxxbbbbb - bbbbbbbb - cdhsrrrr - xxpppppp
 b is the bit turned on based on rank
@@ -80,9 +81,34 @@ int cardToInt(std::string card){
     return res;
 }
 
+std::vector<int> cardsToInts(std::vector<std::string>& cards){
+    std::vector<int> res;
+    for(std::string& card : cards){
+        res.push_back(cardToInt(card));
+    }
+    return res;
+}
+
+
 int primeCombination(std::vector<int>& cards){
     if(cards.size() != 5){
         return -1;
     }
     return (cards[0] & 0xFF) * (cards[1] & 0xFF) * (cards[2] & 0xFF) * (cards[3] & 0xFF) * (cards[4] & 0xFF);
+}
+
+int evaluate(std::vector<std::string>& cards){
+    std::vector<int> cardNums = cardsToInts(cards);
+    int flush = cardNums[0] & cardNums[1] & cardNums[2] & cardNums[3] & cardNums[4] & 0xF000;
+    int q = (cardNums[0] | cardNums[1] | cardNums[2] | cardNums[3] | cardNums[4]) >> 16;
+    int rank;
+    if(flush){
+        rank = flushes[q];
+    } else if(unique5[q]){
+        rank = unique5[q];
+    } else {
+        int key = primeCombination(cardNums);
+        rank = groups.at(key);
+    }
+    return rank;
 }

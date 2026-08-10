@@ -70,7 +70,10 @@ void getTables(){
         std::string card = row[1];
         std::vector<int> cardList;
         for(size_t i = 0; i < card.length(); ++i){
-            cardList.push_back(cardToInt(card[i] + "D"));
+            std::string temp = "";
+            temp += card[i];
+            temp += "D";
+            cardList.push_back(cardToInt(temp));
         }
         int q = (cardList[0] | cardList[1] | cardList[2] | cardList[3] | cardList[4] | cardList[5]) >> 16;
         int rank = std::stoi(row[0]);
