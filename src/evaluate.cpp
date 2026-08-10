@@ -59,7 +59,7 @@ int cardToInt(std::string card){
         case '9':
             res = res | 0b0000'0000'1000'0000'0000'1001'0001'0011;
             break;
-        case '10':
+        case 'T':
             res = res | 0b0000'0001'0000'0000'0000'1010'0001'0111;
             break;
         case 'J':
