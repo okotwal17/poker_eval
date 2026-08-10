@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Writes build/compile_commands.json listing the exact flags used for every
+# source file. The VS Code C/C++ extension reads it so IntelliSense sees the
+# same include paths and -D defines the compiler does.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Shared warning flags. INTERFACE means this target has no sources of its own,
 # it just hands its options to whatever links it, so Catch2 does not inherit them.
 add_library(project_warnings INTERFACE)
