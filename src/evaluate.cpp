@@ -20,12 +20,16 @@ int cardToInt(std::string card){
     switch(suit){
         case 'H':
             res = res | 0b1000'0000'0000'0000;
+            break;
         case 'D':
             res = res | 0b0100'0000'0000'0000;
+            break;
         case 'S':
             res = res | 0b0010'0000'0000'0000;
+            break;
         case 'C':
             res = res | 0b0001'0000'0000'0000;
+            break;
         default:
             return -1;
     }
@@ -33,32 +37,52 @@ int cardToInt(std::string card){
     switch(rank){
         case '2':
             res = res | 0b0000'0000'0000'0001'0000'0010'0000'0010;
+            break;
         case '3':
             res = res | 0b0000'0000'0000'0010'0000'0011'0000'0011;
+            break;
         case '4':
             res = res | 0b0000'0000'0000'0100'0000'0100'0000'0101;
+            break;
         case '5':
             res = res | 0b0000'0000'0000'1000'0000'0101'0000'0111;
+            break;
         case '6':
             res = res | 0b0000'0000'0001'0000'0000'0110'0000'1011;
+            break;
         case '7':
             res = res | 0b0000'0000'0010'0000'0000'0111'0000'1101;
+            break;
         case '8':
             res = res | 0b0000'0000'0100'0000'0000'1000'0001'0001;
+            break;
         case '9':
             res = res | 0b0000'0000'1000'0000'0000'1001'0001'0011;
+            break;
         case '10':
             res = res | 0b0000'0001'0000'0000'0000'1010'0001'0111;
+            break;
         case 'J':
             res = res | 0b0000'0010'0000'0000'0000'1011'0001'1101;
+            break;
         case 'Q':
             res = res | 0b0000'0100'0000'0000'0000'1100'0001'1111;
+            break;
         case 'K':
             res = res | 0b0000'1000'0000'0000'0000'1101'0010'0101;
+            break;
         case 'A':
             res = res | 0b0001'0000'0000'0000'0000'1110'0010'1001;
+            break;
         default:
             return -1;
     }
     return res;
+}
+
+int primeCombination(std::vector<int>& cards){
+    if(cards.size() != 5){
+        return -1;
+    }
+    return (cards[0] & 0xFF) * (cards[1] & 0xFF) * (cards[2] & 0xFF) * (cards[3] & 0xFF) * (cards[4] & 0xFF);
 }
