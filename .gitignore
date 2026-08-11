@@ -1,6 +1,2 @@
 CLAUDE.md
 build/
-#I am using this to benchmark different versions of evaluate to see how fast I can get it
-tests/bench_evaluate.cpp
-#I am using this to try and figure out perfect hashing instead of using an unordered_map to make this stuff a little bit faster. 
-tools/
