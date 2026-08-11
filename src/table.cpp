@@ -67,11 +67,11 @@ void getTables(){
         while(std::getline(ss, cell, ',')){
             row.push_back(cell);
         }
-        std::string card = row[1];
+        std::string cards = row[1];
         std::vector<int> cardList;
-        for(size_t i = 0; i < card.length(); ++i){
+        for(char& card : cards){
             std::string temp = "";
-            temp += card[i];
+            temp += card;
             temp += "D";
             cardList.push_back(cardToInt(temp));
         }
