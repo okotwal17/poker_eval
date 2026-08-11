@@ -13,6 +13,7 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tests
     test_evaluate.cpp
     test_combos.cpp
+    bench_evaluate.cpp
 )
 target_link_libraries(tests PRIVATE poker_core project_warnings Catch2::Catch2WithMain)
 

@@ -92,6 +92,15 @@ TEST_CASE("Every possible five card hand matches the CSV ranking", "[combos][exh
     }
     REQUIRE(deck.size() == 52);
 
+    // The encoded form of the same 52 cards. There are only 52 distinct cards in
+    // existence, so converting here means the 2.6 million iterations below index
+    // into this instead of re-deriving the same encodings over and over.
+    std::vector<int> deckInts;
+    deckInts.reserve(deck.size());
+    for(const std::string& card : deck){
+        deckInts.push_back(cardToInt(card));
+    }
+
     // Reused across iterations so the inner loop does no allocation. Two char
     // strings stay in the small string buffer, so assigning into them is cheap.
     std::vector<std::string> hand(5);
@@ -130,7 +139,8 @@ TEST_CASE("Every possible five card hand matches the CSV ranking", "[combos][exh
                             continue;
                         }
 
-                        const int actual = evaluate(hand);
+                        const int actual = evaluate(deckInts[a], deckInts[b], deckInts[c],
+                                                    deckInts[d], deckInts[e]);
                         if(actual != row->second){
                             ++mismatches;
                             if(firstFailures.size() < 20){

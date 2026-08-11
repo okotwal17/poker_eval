@@ -3,12 +3,9 @@
 #include <iostream>
 
 int main(){
-    std::vector<std::string> cards;
-    cards.push_back("AH");
-    cards.push_back("AD");
-    cards.push_back("AS");
-    cards.push_back("AC");
-    cards.push_back("KH");
-    std::cout << evaluate(cards) << std::endl;
+    // evaluate takes encoded cards, so the string form is converted here, at the
+    // boundary. A simulator would do this once for the whole deck at startup.
+    std::cout << evaluate(cardToInt("AH"), cardToInt("AD"), cardToInt("AS"),
+                          cardToInt("AC"), cardToInt("KH")) << std::endl;
     return 0;
 }

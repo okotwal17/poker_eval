@@ -75,14 +75,14 @@ void getTables(){
             temp += "D";
             cardList.push_back(cardToInt(temp));
         }
-        int q = (cardList[0] | cardList[1] | cardList[2] | cardList[3] | cardList[4] | cardList[5]) >> 16;
+        int q = (cardList[0] | cardList[1] | cardList[2] | cardList[3] | cardList[4]) >> 16;
         int rank = std::stoi(row[0]);
         if(row[2] == "SF" || row[2] == "F"){
             flushes[q] = rank;
         } else if(row[2] == "HC" || row[2] == "S"){
             unique5[q] = rank;
         } else {
-            int primeProduct = primeCombination(cardList);
+            int primeProduct = primeCombination(cardList[0],  cardList[1], cardList[2],  cardList[3], cardList[4]);
             groups[primeProduct] = rank;
         }
     }

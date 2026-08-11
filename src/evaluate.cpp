@@ -81,8 +81,8 @@ int cardToInt(std::string card){
     return res;
 }
 
-std::vector<int> cardsToInts(std::vector<std::string>& cards){
-    std::vector<int> res;
+std::vector<std::uint32_t> cardsToInts(std::vector<std::string>& cards){
+    std::vector<std::uint32_t> res;
     for(std::string& card : cards){
         res.push_back(cardToInt(card));
     }
@@ -90,24 +90,22 @@ std::vector<int> cardsToInts(std::vector<std::string>& cards){
 }
 
 
-int primeCombination(std::vector<int>& cards){
-    if(cards.size() != 5){
-        return -1;
+int primeCombination(std::uint32_t c1, std::uint32_t c2, 
+    std::uint32_t c3, std::uint32_t c4, std::uint32_t c5){
+        return (c1 & 0xFF) * (c2 & 0xFF) * (c3 & 0xFF) * (c4 & 0xFF) * (c5 & 0xFF);
     }
-    return (cards[0] & 0xFF) * (cards[1] & 0xFF) * (cards[2] & 0xFF) * (cards[3] & 0xFF) * (cards[4] & 0xFF);
-}
 
-int evaluate(std::vector<std::string>& cards){
-    std::vector<int> cardNums = cardsToInts(cards);
-    int flush = cardNums[0] & cardNums[1] & cardNums[2] & cardNums[3] & cardNums[4] & 0xF000;
-    int q = (cardNums[0] | cardNums[1] | cardNums[2] | cardNums[3] | cardNums[4]) >> 16;
+int evaluate(std::uint32_t c1, std::uint32_t c2, 
+    std::uint32_t c3, std::uint32_t c4, std::uint32_t c5){
+    int flush = c1 & c2 & c3 & c4 & c5 & 0xF000;
+    int q = (c1 | c2 | c3 | c4 | c5) >> 16;
     int rank;
     if(flush){
         rank = flushes[q];
     } else if(unique5[q]){
         rank = unique5[q];
     } else {
-        int key = primeCombination(cardNums);
+        int key = primeCombination(c1, c2, c3, c4, c5);
         rank = groups.at(key);
     }
     return rank;

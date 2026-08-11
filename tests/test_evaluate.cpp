@@ -20,10 +20,13 @@ CHECK rather than REQUIRE so one broken category reports every failing hand in
 a single run instead of stopping at the first.
 */
 
-// evaluate takes a non-const reference, so it cannot bind to a temporary.
-// This wrapper takes by value to give the call a named lvalue to bind to.
+// evaluate now takes five already encoded cards, since a simulator holds ints and
+// should never pay for string conversion in its inner loop. These tests are still
+// written in card strings because that is how the CSV expresses hands, so the
+// conversion a real caller does once at startup happens here instead.
 static int rankOf(std::vector<std::string> cards){
-    return evaluate(cards);
+    return evaluate(cardToInt(cards[0]), cardToInt(cards[1]), cardToInt(cards[2]),
+                    cardToInt(cards[3]), cardToInt(cards[4]));
 }
 
 TEST_CASE("Straight flushes", "[evaluate][SF]"){
