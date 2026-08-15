@@ -31,6 +31,7 @@ target_compile_options(project_warnings INTERFACE
 add_library(poker_core
     src/evaluate.cpp
     src/table.cpp
+    src/playPoker.cpp
 )
 target_include_directories(poker_core PUBLIC include)
 target_link_libraries(poker_core PRIVATE project_warnings)
