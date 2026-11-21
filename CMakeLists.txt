@@ -36,8 +36,8 @@ add_library(poker_core
 target_include_directories(poker_core PUBLIC include)
 target_link_libraries(poker_core PRIVATE project_warnings)
 
-add_executable(gen src/main.cpp)
-target_link_libraries(gen PRIVATE poker_core project_warnings)
+add_executable(equity src/main.cpp)
+target_link_libraries(equity PRIVATE poker_core project_warnings)
 
 # Offline search for a perfect hash over the groups keys. Never linked into
 # poker_core, it just reads the tables and prints candidates.
