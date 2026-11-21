@@ -39,6 +39,10 @@ target_link_libraries(poker_core PRIVATE project_warnings)
 add_executable(equity src/main.cpp)
 target_link_libraries(equity PRIVATE poker_core project_warnings)
 
+# Same engine as equity, but args in and one line of JSON out, for the Python coach.
+add_executable(equity_cli src/equity_cli.cpp)
+target_link_libraries(equity_cli PRIVATE poker_core project_warnings)
+
 # Offline search for a perfect hash over the groups keys. Never linked into
 # poker_core, it just reads the tables and prints candidates.
 add_executable(find_hash tools/find_hash.cpp)

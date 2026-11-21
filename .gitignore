@@ -2,3 +2,10 @@ CLAUDE.md
 build/
 #Notes for what I want to come back into the future
 FUTURE.md
+#Python coach: virtualenv, API key, caches
+.venv/
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+coach/eval_results.json
