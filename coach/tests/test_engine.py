@@ -38,6 +38,29 @@ def test_river_counts_every_opponent_hand():
     assert r["scenarios"] == 990  # C(45,2)
 
 
+# ---------- hand facts (computed in C++, passed through) ----------
+
+def test_flop_includes_hand_facts():
+    # The spot where the coach once claimed AS gave a backdoor flush on a spadeless board.
+    r = calculate_equity(["AS", "KC"], ["KH", "QC", "2C"])
+    assert r["made_hand"] == {"category": "one pair", "from_board": False,
+                              "pair_type": "top pair", "kicker": "A"}
+    assert r["overcards"] == 1
+    flush_draws = [d for d in r["draws"] if "flush" in d["type"]]
+    assert flush_draws == [{"type": "backdoor flush draw", "suit": "clubs", "nut": False}]
+
+
+def test_river_has_facts_but_no_draws():
+    r = calculate_equity(["AH", "KH"], ["QH", "7H", "2C", "3D", "9S"])
+    assert r["made_hand"]["category"] == "high card"
+    assert r["draws"] == []
+
+
+def test_preflop_has_no_hand_facts():
+    r = calculate_equity(["AS", "AH"], seed=42)
+    assert not {"made_hand", "overcards", "draws"} & set(r)
+
+
 # ---------- input normalisation ----------
 
 @pytest.mark.parametrize("raw,expected", [

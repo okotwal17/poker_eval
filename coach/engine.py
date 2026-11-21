@@ -98,7 +98,7 @@ def calculate_equity(hand, board=None, *, samples=None, seed=None,
     try:
         raw = json.loads(proc.stdout)
         scenarios = raw["scenarios"]
-        return {
+        result = {
             "hand": hand,
             "board": board,
             "street": STREETS[len(board)],
@@ -109,5 +109,11 @@ def calculate_equity(hand, board=None, *, samples=None, seed=None,
             "method": raw["method"],
             "scenarios": scenarios,
         }
+        # Hand facts are computed in C++ (postflop only). Passed through as-is:
+        # Python does no poker logic, it just hands the model what the engine found.
+        for key in ("made_hand", "overcards", "draws"):
+            if key in raw:
+                result[key] = raw[key]
+        return result
     except (json.JSONDecodeError, KeyError, TypeError, ZeroDivisionError):
         return {"error": f"equity engine returned unreadable output: {proc.stdout[:200]!r}"}

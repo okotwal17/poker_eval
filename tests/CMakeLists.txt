@@ -15,6 +15,7 @@ add_executable(tests
     test_combos.cpp
     test_deck.cpp
     test_equity.cpp
+    test_handFacts.cpp
     bench_evaluate.cpp
 )
 target_link_libraries(tests PRIVATE poker_core project_warnings Catch2::Catch2WithMain)

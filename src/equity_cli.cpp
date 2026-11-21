@@ -8,6 +8,7 @@ of JSON. No card validation here on purpose: the Python caller checks format,
 duplicates and board size before calling, so the engine path stays check-free.
 */
 #include <evaluate.h>
+#include <handFacts.h>
 #include <playPoker.h>
 #include <array>
 #include <cstdint>
@@ -17,6 +18,88 @@ duplicates and board size before calling, so the engine path stays check-free.
 #include <vector>
 
 namespace {
+
+//handFacts returns enums and numbers; these turn them into words for the JSON.
+const char* categoryName(Category c){
+    switch(c){
+        case Category::StraightFlush: return "straight flush";
+        case Category::FourOfAKind:   return "four of a kind";
+        case Category::FullHouse:     return "full house";
+        case Category::Flush:         return "flush";
+        case Category::Straight:      return "straight";
+        case Category::ThreeOfAKind:  return "three of a kind";
+        case Category::TwoPair:       return "two pair";
+        case Category::OnePair:       return "one pair";
+        case Category::HighCard:      return "high card";
+    }
+    return "";
+}
+
+const char* pairTypeName(PairType p){
+    switch(p){
+        case PairType::Overpair:   return "overpair";
+        case PairType::TopPair:    return "top pair";
+        case PairType::MiddlePair: return "middle pair";
+        case PairType::BottomPair: return "bottom pair";
+        case PairType::Underpair:  return "underpair";
+        case PairType::None:       return "";
+    }
+    return "";
+}
+
+const char* drawName(DrawType d){
+    switch(d){
+        case DrawType::FlushDraw:        return "flush draw";
+        case DrawType::BackdoorFlush:    return "backdoor flush draw";
+        case DrawType::OpenEnded:        return "open-ended straight draw";
+        case DrawType::Gutshot:          return "gutshot straight draw";
+        case DrawType::BackdoorStraight: return "backdoor straight draw";
+    }
+    return "";
+}
+
+const char* suitName(int suit){
+    switch(suit){
+        case 0x8: return "hearts";
+        case 0x4: return "diamonds";
+        case 0x2: return "spades";
+        case 0x1: return "clubs";
+    }
+    return "";
+}
+
+/*
+, "made_hand": {"category": "one pair", "from_board": false, "pair_type": "top pair", "kicker": "A"},
+  "overcards": 1, "draws": [{"type": "backdoor flush draw", "suit": "clubs", "nut": false}]
+Absent fields are JSON null so the shape is the same on every street.
+*/
+void printFacts(const HandFacts& f){
+    const char* rankChars = "23456789TJQKA";
+    std::cout << ", \"made_hand\": {\"category\": \"" << categoryName(f.category) << "\""
+              << ", \"from_board\": " << (f.fromBoard ? "true" : "false")
+              << ", \"pair_type\": ";
+    if(f.pairType == PairType::None){
+        std::cout << "null";
+    } else {
+        std::cout << "\"" << pairTypeName(f.pairType) << "\"";
+    }
+    std::cout << ", \"kicker\": ";
+    if(f.kicker < 0){
+        std::cout << "null";
+    } else {
+        std::cout << "\"" << rankChars[f.kicker] << "\"";
+    }
+    std::cout << "}, \"overcards\": " << f.overcards << ", \"draws\": [";
+    for(std::size_t i = 0; i < f.draws.size(); ++i){
+        const Draw& d = f.draws[i];
+        std::cout << (i ? ", " : "") << "{\"type\": \"" << drawName(d.type) << "\"";
+        if(d.suit){
+            std::cout << ", \"suit\": \"" << suitName(d.suit) << "\"";
+        }
+        std::cout << ", \"nut\": " << (d.nut ? "true" : "false") << "}";
+    }
+    std::cout << "]";
+}
 
 //"QH7H2C" -> {"QH", "7H", "2C"}, the shape cardsToInts takes.
 std::vector<std::string> splitCards(const std::string& s){
@@ -79,6 +162,11 @@ int main(int argc, char** argv){
               << ", \"tie\": " << stats[1]
               << ", \"loss\": " << stats[2]
               << ", \"scenarios\": " << total
-              << ", \"method\": \"" << method << "\"}" << std::endl;
+              << ", \"method\": \"" << method << "\"";
+    //Hand facts are postflop only: preflop there is no made hand or draw to describe.
+    if(!board.empty()){
+        printFacts(handFacts(playerHand, board));
+    }
+    std::cout << "}" << std::endl;
     return 0;
 }

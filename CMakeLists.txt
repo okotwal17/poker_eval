@@ -32,6 +32,7 @@ add_library(poker_core
     src/evaluate.cpp
     src/table.cpp
     src/playPoker.cpp
+    src/handFacts.cpp
 )
 target_include_directories(poker_core PUBLIC include)
 target_link_libraries(poker_core PRIVATE project_warnings)
